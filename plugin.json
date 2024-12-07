@@ -1,0 +1,9 @@
+{
+    "name": "Magic Arbiter AI",
+    "version": "0.0.1",
+    "description": "Give the Cheshire Cat the ability to retrieve information about Magic: The Gathering cards and also set a proper prompt",
+    "author_name": "Federico Maria Vancini",
+    "author_url": "https://it.linkedin.com/in/federico-maria-vancini-71aa1b18b",
+    "plugin_url": "https://github.com/vancif/cat-magic-arbiter",
+    "tags": "cat, tool, prompt"
+}
