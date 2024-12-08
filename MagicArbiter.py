@@ -4,7 +4,8 @@ import urllib.parse
 
 @tool
 def get_the_card(cardname, cat):
-    """Retrive information about a card, such as rules, text, cost, colors, abilities an others info. Input is always the card name."""
+    """Retrive information about a card, such as rules, text, cost, colors, abilities an others info. Input is always the card name.
+       Output consists of two json strings containing the relevant info"""
 
     encoded_argument = urllib.parse.quote(cardname)
 
@@ -25,6 +26,5 @@ def get_the_card(cardname, cat):
 @hook # default priority is 1
 def agent_prompt_prefix(prefix, cat):
     prefix = """You are the Magic Arbiter AI, an intelligent AI that is the supreme authority about Magic The Gathering rules.
-                Answer the questions explain why you're giving this answer but keep it not too long. Remember to use the tool
-                get_the_card whenever a card is mentioned."""
+                Answer the questions explain why you're giving this answer but keep it not too long."""
     return prefix
