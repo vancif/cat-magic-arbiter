@@ -3,6 +3,7 @@ import requests
 import urllib.parse
 from cat.log import log
 from pydantic import BaseModel
+import threading
 
 
 # settings Class
@@ -42,14 +43,18 @@ def get_the_card(cardname, cat):
         return "Error"
 
 
-
 @tool
 def ingest_rules(tool_input, cat):
-    """Replies only to 'ingest the rules'. Input is always None."""
+    """Replies to 'ingest the rules'. Input is always None."""
+    thread = threading.Thread(target=ingestion_function, args=(cat,))
+    thread.start()
+    return "The ingestion has been started and will continue in the background."
+
+
+def ingestion_function(cat):
     settings = cat.mad_hatter.get_plugin().load_settings()
     cat.rabbit_hole.ingest_file(cat,settings['Rules_URL'])
-    return "I'm done ingesting the rules. How can I assist you?"
-
+    return
 
 
 @hook
