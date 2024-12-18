@@ -24,7 +24,7 @@ From here, you have 2 options
 
 > **Note**: During the ingestion process, Cheshire Cat will be unavailable. Please be patient, as this operation may take a significant amount of time depending on the size of the rules file.
 
-#### Options B
+#### Option B
 
 - **Ask the Cat** to "ingest the rules". The ingestion will start and complete as a background task.
 
