@@ -17,8 +17,10 @@ def settings_model():
 
 
 @tool
-def get_the_card(cardname, cat):
+def card_info(cardname, cat):
     """Retrieve information about a card, such as rules, text, cost, colors, abilities an others info.
+       Use this tool to reply to questions like 'what does {cardname} do?', 'What is the cost of {cardname}?'
+       even if the word 'card' is not present in the question.
        Input is always the card name.
        Output consists of two json strings containing the relevant info"""
 
@@ -70,7 +72,7 @@ def after_cat_bootstrap(cat):
     memory_len = len(cat.memory.vectors.declarative.get_all_points())
 
     # Some logging
-    log.info("Rules URL impostato: " + str("Rules_URL" in settings))
+    log.info("Rules URL set: " + str("Rules_URL" in settings))
     log.info("Rules ingestion: " + str(settings['Activate_rule_ingestion_on_startup']))
     log.info(f"Declarative memory is of size {memory_len}")
 
