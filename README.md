@@ -8,7 +8,7 @@ The plugin leverages the [Scryfall Public API](https://scryfall.com/docs/api) to
 
 # Plugin Configuration
 
-The plugin checks for memory content every time Cheshire Cat starts. If the memory is empty and the "Rule Ingestion" option is enabled, the plugin automatically ingests the specified rules page.
+The plugin checks for memory content every time Cheshire Cat starts. If the memory is empty and the "Rule Ingestion" option is enabled, the plugin automatically ingests the rules page specified in plugin configuration.
 
 ## Steps to Set Up the Plugin
 
@@ -29,3 +29,6 @@ From here, you have 2 options
 - **Ask the Cat** to "ingest the rules". The ingestion will start and complete as a background task.
 
 With these steps completed, Cheshire Cat will be fully equipped to assist with *Magic: The Gathering* gameplay and card queries.
+
+### Special tool included in the plugin
+- **Rule ingestion**: You can ask the Cat to ingest the rules anytime in any chat. If you do, the Cat will ingest the rules from the same URL specified above, but will perform this task asynchronously in the background.
