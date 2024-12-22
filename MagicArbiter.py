@@ -19,7 +19,7 @@ def settings_model():
 @tool
 def card_info(cardname, cat):
     """Retrieve information about a card, such as rules, text, cost, colors, abilities an others info.
-       Use this tool to reply to questions like 'what does {cardname} do?', 'What is the cost of {cardname}?'
+       You can use this tool to reply to questions like 'what does {cardname} do?', 'What is the cost of {cardname}?'
        even if the word 'card' is not present in the question.
        Input is always the card name.
        Output consists of two json strings containing the relevant info"""
@@ -51,6 +51,11 @@ def ingest_rules(tool_input, cat):
     settings = cat.mad_hatter.get_plugin().load_settings()
     cat.rabbit_hole.ingest_file(cat,settings['Rules_URL'])
     return "I'm done ingesting the rules. How can I assist you?"
+
+@hook
+def agent_allowed_tools(allowed_tools, cat):
+    allowed_tools.add("card_info")
+    return allowed_tools
 
 
 
