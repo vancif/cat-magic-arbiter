@@ -53,6 +53,7 @@ def ingest_rules(tool_input, cat):
     return "The ingestion has been started and will continue in the background."
 
 
+
 def ingestion_function(cat):
     settings = cat.mad_hatter.get_plugin().load_settings()
     cat.rabbit_hole.ingest_file(cat,settings['Rules_URL'])
