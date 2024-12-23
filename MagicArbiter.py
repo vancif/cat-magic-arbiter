@@ -67,23 +67,24 @@ def agent_prompt_prefix(prefix, cat):
 
 
 
-@hook
 def after_cat_bootstrap(cat):
 
     # Load plugin settings
     settings = cat.mad_hatter.get_plugin().load_settings()
+    rules_url = settings.get("Rules_URL")
+    rules_ingest = settings.get("Activate_rule_ingestion_on_startup")
 
     # Declarative memory vector length
     memory_len = len(cat.memory.vectors.declarative.get_all_points())
 
-    # Some logging
-    log.info("Rules URL set: " + str("Rules_URL" in settings))
-    log.info("Rules ingestion: " + str(settings['Activate_rule_ingestion_on_startup']))
-    log.info(f"Declarative memory is of size {memory_len}")
+    # Adequate logging
+    log.info(f"Rules URL present: {rules_url}")
+    log.info(f"Rules ingestion on startup: {rules_ingest}")
+    log.info(f"Declarative memory size: {memory_len}")
 
-    if (memory_len == 0 and "Rules_URL" in settings and settings['Activate_rule_ingestion_on_startup']):
+    if (memory_len == 0 and rules_url and rules_ingest):
         log.info("Doing rules ingestion")
-        cat.rabbit_hole.ingest_file(cat,settings['Rules_URL'])
+        cat.rabbit_hole.ingest_file(cat,rules_url)
     else:
         log.info("Skipping rules ingestion")
     return
