@@ -48,15 +48,20 @@ def card_info(cardname, cat):
 @tool
 def ingest_rules(tool_input, cat):
     """Replies to 'ingest the rules'. Input is always None."""
-    thread = threading.Thread(target=ingestion_function, args=(cat,))
-    thread.start()
-    return "The ingestion has been started and will continue in the background."
-
-
-
-def ingestion_function(cat):
     settings = cat.mad_hatter.get_plugin().load_settings()
-    cat.rabbit_hole.ingest_file(cat,settings['Rules_URL'])
+    rules_url = settings.get("Rules_URL")
+
+    if not rules_url:
+        return "The rules URL is not set. Tell the user to set it in the plugin settings"
+    else:
+        thread = threading.Thread(target=ingestion_function, args=(cat,rules_url))
+        thread.start()
+        return "Tell to user that the ingestion has been started and will continue in the background."
+
+
+
+def ingestion_function(cat,url):
+    cat.rabbit_hole.ingest_file(cat,url)
     return
 
 
@@ -74,7 +79,7 @@ def agent_prompt_prefix(prefix, cat):
     return prefix
 
 
-
+@hook
 def after_cat_bootstrap(cat):
 
     # Load plugin settings
