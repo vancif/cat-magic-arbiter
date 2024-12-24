@@ -4,6 +4,7 @@ import urllib.parse
 from cat.log import log
 from pydantic import BaseModel
 import threading
+import json
 
 
 # settings Class
@@ -47,16 +48,28 @@ def card_info(cardname, cat):
 
 @tool
 def ingest_rules(tool_input, cat):
-    """Replies to 'ingest the rules'. Input is always None."""
+    """Use this tool when the user wants you to learn the rules. Input is always None."""
     settings = cat.mad_hatter.get_plugin().load_settings()
     rules_url = settings.get("Rules_URL")
 
-    if not rules_url:
-        return "The rules URL is not set. Tell the user to set it in the plugin settings"
+    memory_len = len(cat.memory.vectors.declarative.get_all_points())
+
+    if memory_len == 0:
+        if not rules_url:
+            return "The rules URL is not set. Tell the user to set it in the plugin settings"
+        else:
+            thread = threading.Thread(target=ingestion_function, args=(cat,rules_url))
+            thread.start()
+            response = {"output":"The ingestion has been started and will continue in the background.",
+                    "additional_info":{
+                        "cost":"The cost depends on the embedder. With ada-v2 from OpenAI, it's about 0.03$ as of end of 2024.",
+                        "time":"The ingestion will take about 5/10 minutes to complete on a decent machine.",
+                        "status":"reported via notifications"
+                    }
+                    }
+            return json.dumps(response)
     else:
-        thread = threading.Thread(target=ingestion_function, args=(cat,rules_url))
-        thread.start()
-        return "Tell to user that the ingestion has been started and will continue in the background."
+        return "The memory is not empty and maybe the rules have already been ingested. If you want to re-ingest the rules, clear the memory first."
 
 
 
