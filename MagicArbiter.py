@@ -62,7 +62,7 @@ def ingest_rules(tool_input, cat):
             thread.start()
             response = {"output":"The ingestion has been started and will continue in the background.",
                     "additional_info":{
-                        "cost":"The cost depends on the embedder. With ada-v2 from OpenAI, it's about 0.03$ as of end of 2024.",
+                        "cost":"The cost depends on the embedder. With ada-v2 from OpenAI, it's about 0.06$ as of end of 2024.",
                         "time":"The ingestion will take about 5/10 minutes to complete on a decent machine.",
                         "status":"reported via notifications"
                     }
