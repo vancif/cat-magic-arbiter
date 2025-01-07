@@ -69,7 +69,7 @@ def ingest_rules(tool_input, cat):
                     }
             return json.dumps(response)
     else:
-        return "The memory is not empty and maybe the rules have already been ingested. If you want to re-ingest the rules, clear the memory first."
+        return "The memory is not empty and maybe the rules have already been ingested. If the Human wants to re-ingest the rules, the Human has to clear the memory first."
 
 
 
