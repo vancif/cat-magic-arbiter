@@ -114,3 +114,28 @@ def after_cat_bootstrap(cat):
     else:
         log.info("Skipping rules ingestion")
     return
+
+
+@hook
+def before_cat_reads_message(user_message_json, cat):
+    if len(cat.memory.vectors.declarative.get_all_points()) == 0:
+        cat.working_memory.emptyDeclarative = True
+    else:
+        cat.working_memory.emptyDeclarative = False
+
+    return user_message_json
+
+
+@hook
+def before_cat_sends_message(message, cat):
+    
+    if cat.working_memory.emptyDeclarative:
+        warning_message = "WARNING: The declarative memory is empty. Consider to ingest the rules first to improve the quality of my answers.<br>\n"
+
+    for step in message.why.intermediate_steps:
+        if step[0][0] == "ingest_rules":
+             warning_message = ""
+
+    message.content = warning_message + message.content
+
+    return message
