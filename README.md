@@ -30,25 +30,26 @@ From here, you have 2 options
 
 With these steps completed, Cheshire Cat will be fully equipped to assist with *Magic: The Gathering* gameplay and card queries.
 
-### Special tool included in the plugin
+### Special tools included in the plugin
 - **Rule ingestion**: You can ask the Cat to ingest the rules anytime in any chat. If you do, the Cat will ingest the rules from the same URL specified above, but will perform this task asynchronously in the background.
 - **Memory deletion** Ask the Cat to delete the memory in order to clear all the collection where the rules are stored. Useful if you want to ingest the rules again as they change over time.
 
-3. **Plugin Options**:
-### `Rules_URL`
+# Plugin Options
+
+## `Rules_URL`
 - **Type:** `str`
 - **Description:** URL pointing to the rules txt file, as explained above
 
 ---
 
-### `Activate_rule_ingestion_on_startup`
+## `Activate_rule_ingestion_on_startup`
 - **Type:** `bool`
 - **Default:** `False`
 - **Description:** Determines whether the rule ingestion process is activated during the Cat bootstrap. Ingestion will only occur if memory is empty.
 
 ---
 
-### `Strict_Mode`
+## `Strict_Mode`
 - **Type:** `bool`
 - **Default:** `False`
 - **Description:**  
