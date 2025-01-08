@@ -2,7 +2,7 @@ from cat.mad_hatter.decorators import tool, hook, plugin
 import requests
 import urllib.parse
 from cat.log import log
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import threading
 import json
 
@@ -11,6 +11,10 @@ import json
 class PluginSettings(BaseModel):
     Rules_URL: str
     Activate_rule_ingestion_on_startup: bool = False
+    Strict_Mode: bool = Field(
+        default=False,
+        description="When Enabled, the plugin will instruct the LLM to respond using only data that can be sourced from stored knowledge or an API."
+    )
 
 
 @plugin
@@ -69,7 +73,16 @@ def ingest_rules(tool_input, cat):
                     }
             return json.dumps(response)
     else:
-        return "The memory is not empty and maybe the rules have already been ingested. If the Human wants to re-ingest the rules, the Human has to clear the memory first."
+        return "The memory is not empty and maybe the rules have already been ingested. If you want to re-ingest the rules, clear the memory first."
+
+
+
+@tool
+def delete_memory(tool_input, cat):
+    """Use this tool when the user wants you to forget everything you have learned or delete the memory. Input is always None."""
+    points = cat.memory.vectors.declarative.get_all_points()
+    cat.memory.vectors.declarative.delete_points([item.id for item in points])
+    return "The memory has been cleared."
 
 
 
@@ -78,18 +91,48 @@ def ingestion_function(cat,url):
     return
 
 
-@hook
-def agent_allowed_tools(allowed_tools, cat):
-    allowed_tools.add("card_info")
-    return allowed_tools
 
-
-
-@hook
+@hook(priority=1)
 def agent_prompt_prefix(prefix, cat):
+    settings = cat.mad_hatter.get_plugin().load_settings()
+    Strict_Mode = settings.get("Strict_Mode")
+
     prefix = """You are the Magic Arbiter AI, an intelligent AI that is the supreme authority about Magic The Gathering rules.
-                Answer the questions explain why you're giving this answer but keep it not too long."""
+Answer the questions explain why you're giving this answer but keep it not too long."""
+
+    if Strict_Mode:
+        prefix += """
+Given the content of the xml tag <memory> below,
+go on with conversation only using info retrieved from the <memory> contents.
+It is important you only rely on `<memory>` because we are in a high risk environment.
+If <memory> is empty or irrelevant to the conversation, ask for different wording or to contact the community.
+"""
     return prefix
+
+
+@hook
+def agent_prompt_suffix(suffix, cat):
+    settings = cat.mad_hatter.get_plugin().load_settings()
+    Strict_Mode = settings.get("Strict_Mode")
+
+    if Strict_Mode:
+        return """
+<memory>
+    <memory-past-conversations>
+{episodic_memory}
+    </memory-past-conversations>
+
+    <memory-from-documents>
+{declarative_memory}
+    </memory-from-documents>
+
+    <memory-from-executed-actions>
+{tools_output}
+    </memory-from-executed-actions>
+</memory>
+"""
+    else:
+        return suffix
 
 
 @hook
@@ -117,6 +160,23 @@ def after_cat_bootstrap(cat):
 
 
 @hook
+def agent_fast_reply(fast_reply, cat):
+
+    #if cat.working_memory.emptyDeclarative:
+    #if len(cat.working_memory.declarative_memories) == 0:
+    #    fast_reply["output"] = "WARNING: The declarative memory is empty. Consider to ingest the rules first to improve the quality of my answers."
+    return fast_reply
+
+
+
+@hook
+def agent_allowed_tools(allowed_tools, cat):
+    allowed_tools.add("card_info")
+    return allowed_tools
+
+
+
+@hook
 def before_cat_reads_message(user_message_json, cat):
     if len(cat.memory.vectors.declarative.get_all_points()) == 0:
         cat.working_memory.emptyDeclarative = True
@@ -125,9 +185,10 @@ def before_cat_reads_message(user_message_json, cat):
 
     return user_message_json
 
-
 @hook
 def before_cat_sends_message(message, cat):
+
+    warning_message = ""
     
     if cat.working_memory.emptyDeclarative:
         warning_message = "WARNING: The declarative memory is empty. Consider to ingest the rules first to improve the quality of my answers.<br>\n"
