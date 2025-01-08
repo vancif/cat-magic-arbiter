@@ -105,7 +105,7 @@ Answer the questions explain why you're giving this answer but keep it not too l
 Given the content of the xml tag <memory> below,
 go on with conversation only using info retrieved from the <memory> contents.
 It is important you only rely on `<memory>` because we are in a high risk environment.
-If <memory> is empty or irrelevant to the conversation, ask for different wording or to contact the community.
+If <memory> is empty or irrelevant to the conversation, ask for different wording.
 """
     return prefix
 
