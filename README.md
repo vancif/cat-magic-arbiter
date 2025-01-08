@@ -36,20 +36,20 @@ With these steps completed, Cheshire Cat will be fully equipped to assist with *
 
 # Plugin Options
 
-## `Rules_URL`
+### `Rules_URL`
 - **Type:** `str`
 - **Description:** URL pointing to the rules txt file, as explained above
 
 ---
 
-## `Activate_rule_ingestion_on_startup`
+### `Activate_rule_ingestion_on_startup`
 - **Type:** `bool`
 - **Default:** `False`
 - **Description:** Determines whether the rule ingestion process is activated during the Cat bootstrap. Ingestion will only occur if memory is empty.
 
 ---
 
-## `Strict_Mode`
+### `Strict_Mode`
 - **Type:** `bool`
 - **Default:** `False`
 - **Description:**  
