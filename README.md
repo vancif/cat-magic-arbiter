@@ -36,20 +36,20 @@ With these steps completed, Cheshire Cat will be fully equipped to assist with *
 
 # Plugin Options
 
-### `Rules_URL`
+### Rules_URL
 - **Type:** `str`
 - **Description:** URL pointing to the rules txt file, as explained above
 
 ---
 
-### `Activate_rule_ingestion_on_startup`
+### Activate_rule_ingestion_on_startup
 - **Type:** `bool`
 - **Default:** `False`
 - **Description:** Determines whether the rule ingestion process is activated during the Cat bootstrap. Ingestion will only occur if memory is empty.
 
 ---
 
-### `Strict_Mode`
+### Strict_Mode
 - **Type:** `bool`
 - **Default:** `False`
 - **Description:**  
@@ -57,3 +57,14 @@ With these steps completed, Cheshire Cat will be fully equipped to assist with *
   **Usage:**  
   - Useful for scenarios where accuracy and traceability of responses are critical.  
   - Default behavior allows more flexibility in generating responses.
+
+--
+
+### Forget_Episodic_Memory
+- **Type:** `bool`
+- **Default:** `False`
+- **Description:**  
+  When enabled (`True`), the plugin will delete the episodic memory every 5 minutes.  
+  **Usage:**  
+  - This is useful to prevent the system from sourcing information from previous user inputs that may be incorrect or outdated.  
+  - Default behavior retains the episodic memory for continuity in interactions.

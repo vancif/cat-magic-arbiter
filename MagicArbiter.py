@@ -15,6 +15,10 @@ class PluginSettings(BaseModel):
         default=False,
         description="When Enabled, the plugin will instruct the LLM to respond using only data that can be sourced from stored knowledge or an API."
     )
+    Forget_Episodic_Memory: bool = Field(
+        default=False,
+        description="When Enabled, the plugin will delete the episodic memory every 5 minutes and also prevents the storage of new memories. This is useful to avoid the Cat sourcing from things the user said and may be uncorrect."
+    )
 
 
 @plugin
@@ -142,6 +146,7 @@ def after_cat_bootstrap(cat):
     settings = cat.mad_hatter.get_plugin().load_settings()
     rules_url = settings.get("Rules_URL")
     rules_ingest = settings.get("Activate_rule_ingestion_on_startup")
+    Forget_Episodic_Memory = settings.get("Forget_Episodic_Memory")
 
     # Declarative memory vector length
     memory_len = len(cat.memory.vectors.declarative.get_all_points())
@@ -156,6 +161,18 @@ def after_cat_bootstrap(cat):
         cat.rabbit_hole.ingest_file(cat,rules_url)
     else:
         log.info("Skipping rules ingestion")
+
+    # define job to clean episodic memory
+    def episodic_memory_cleaner(cat):
+        if Forget_Episodic_Memory:
+            episodic_memory_points = cat.memory.vectors.episodic.get_all_points()
+            cat.memory.vectors.episodic.delete_points([item.id for item in episodic_memory_points])
+            log.info("Episodic memory cleaned")
+        return
+    
+    # Schedule the job to run at the specified interval
+    cat.white_rabbit.schedule_interval_job(episodic_memory_cleaner, seconds=60*5, cat=cat)
+    
     return
 
 
@@ -200,3 +217,12 @@ def before_cat_sends_message(message, cat):
     message.content = warning_message + message.content
 
     return message
+
+
+@hook
+def before_cat_stores_episodic_memory(doc, cat):
+    settings = cat.mad_hatter.get_plugin().load_settings()
+    Forget_Episodic_Memory = settings.get("Forget_Episodic_Memory")
+    if Forget_Episodic_Memory:
+        doc.page_content = ''
+    return doc
