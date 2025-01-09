@@ -58,7 +58,7 @@ With these steps completed, Cheshire Cat will be fully equipped to assist with *
   - Useful for scenarios where accuracy and traceability of responses are critical.  
   - Default behavior allows more flexibility in generating responses.
 
---
+---
 
 ### Forget_Episodic_Memory
 - **Type:** `bool`
