@@ -9,8 +9,13 @@ import json
 
 # settings Class
 class PluginSettings(BaseModel):
-    Rules_URL: str
-    Activate_rule_ingestion_on_startup: bool = False
+    Rules_URL: str = Field(
+        default=""
+    )
+    Activate_rule_ingestion_on_startup: bool = Field(
+        default=False,
+        description="When Enabled, the plugin will ingest the rules from the URL provided in the Rules_URL field upon Cat bootstrap"
+    )
     Strict_Mode: bool = Field(
         default=False,
         description="When Enabled, the plugin will instruct the LLM to respond using only data that can be sourced from stored knowledge or an API."
