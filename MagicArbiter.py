@@ -151,7 +151,6 @@ def after_cat_bootstrap(cat):
     settings = cat.mad_hatter.get_plugin().load_settings()
     rules_url = settings.get("Rules_URL")
     rules_ingest = settings.get("Activate_rule_ingestion_on_startup")
-    Forget_Episodic_Memory = settings.get("Forget_Episodic_Memory")
 
     # Declarative memory vector length
     memory_len = len(cat.memory.vectors.declarative.get_all_points())
@@ -169,6 +168,8 @@ def after_cat_bootstrap(cat):
 
     # define job to clean episodic memory
     def episodic_memory_cleaner(cat):
+        settings = cat.mad_hatter.get_plugin().load_settings()
+        Forget_Episodic_Memory = settings.get("Forget_Episodic_Memory")
         if Forget_Episodic_Memory:
             episodic_memory_points = cat.memory.vectors.episodic.get_all_points()
             cat.memory.vectors.episodic.delete_points([item.id for item in episodic_memory_points])
