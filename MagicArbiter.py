@@ -153,7 +153,7 @@ def after_cat_bootstrap(cat):
     rules_ingest = settings.get("Activate_rule_ingestion_on_startup")
 
     # Declarative memory vector length
-    memory_len = len(cat.memory.vectors.declarative.get_all_points())
+    memory_len = len(cat.memory.vectors.declarative.get_all_points()[0])
 
     # Adequate logging
     log.info(f"Rules URL present: {rules_url}")
@@ -171,7 +171,8 @@ def after_cat_bootstrap(cat):
         settings = cat.mad_hatter.get_plugin().load_settings()
         Forget_Episodic_Memory = settings.get("Forget_Episodic_Memory")
         if Forget_Episodic_Memory:
-            episodic_memory_points = cat.memory.vectors.episodic.get_all_points()
+            episodic_memory_points, nextPageOffset = cat.memory.vectors.episodic.get_all_points()
+            log.info(f"lenght episodic memory: {len(episodic_memory_points)}")
             cat.memory.vectors.episodic.delete_points([item.id for item in episodic_memory_points])
             log.info("Episodic memory cleaned")
         return
@@ -220,7 +221,7 @@ def before_cat_sends_message(message, cat):
         if step[0][0] == "ingest_rules":
              warning_message = ""
 
-    message.content = warning_message + message.content
+    message.text = warning_message + message.text
 
     return message
 
