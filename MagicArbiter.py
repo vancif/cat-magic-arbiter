@@ -65,7 +65,7 @@ def ingest_rules(tool_input, cat):
     settings = cat.mad_hatter.get_plugin().load_settings()
     rules_url = settings.get("Rules_URL")
 
-    memory_len = len(cat.memory.vectors.declarative.get_all_points())
+    memory_len = len(cat.memory.vectors.declarative.get_all_points()[0])
 
     if memory_len == 0:
         if not rules_url:
@@ -89,9 +89,9 @@ def ingest_rules(tool_input, cat):
 @tool
 def delete_memory(tool_input, cat):
     """Use this tool when the user wants you to forget everything you have learned or delete the memory. Input is always None."""
-    points = cat.memory.vectors.declarative.get_all_points()
+    points = cat.memory.vectors.declarative.get_all_points()[0]
     cat.memory.vectors.declarative.delete_points([item.id for item in points])
-    return "The memory has been cleared."
+    return "The memory has been cleared as requested"
 
 
 
@@ -179,6 +179,8 @@ def after_cat_bootstrap(cat):
     
     # Schedule the job to run at the specified interval
     cat.white_rabbit.schedule_interval_job(episodic_memory_cleaner, seconds=60*5, cat=cat)
+    # call now for cleaning past interaction
+    episodic_memory_cleaner(cat)
     
     return
 
@@ -202,7 +204,7 @@ def agent_allowed_tools(allowed_tools, cat):
 
 @hook
 def before_cat_reads_message(user_message_json, cat):
-    if len(cat.memory.vectors.declarative.get_all_points()) == 0:
+    if len(cat.memory.vectors.declarative.get_all_points()[0]) == 0:
         cat.working_memory.emptyDeclarative = True
     else:
         cat.working_memory.emptyDeclarative = False

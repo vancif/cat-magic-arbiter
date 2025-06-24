@@ -1,7 +1,7 @@
 {
     "name": "Magic Arbiter AI",
-    "version": "1.0.0",
-    "description": "Compatible Cat Version: 1.8.0\nEmpower the Cheshire Cat to access detailed information about Magic: The Gathering cards, enabling it to deliver more accurate and insightful answers to game-related questions.",
+    "version": "1.0.1",
+    "description": "Compatible Cat Version: 1.9.1\nEmpower the Cheshire Cat to access detailed information about Magic: The Gathering cards, enabling it to deliver more accurate and insightful answers to game-related questions.",
     "author_name": "Federico Maria Vancini",
     "author_url": "https://it.linkedin.com/in/federico-maria-vancini-71aa1b18b",
     "plugin_url": "https://github.com/vancif/cat-magic-arbiter",
