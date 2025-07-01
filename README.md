@@ -68,3 +68,19 @@ With these steps completed, Cheshire Cat will be fully equipped to assist with *
   **Usage:**  
   - This is useful to prevent the system from sourcing information from previous user inputs that may be incorrect or outdated.  
   - Default behavior retains the episodic memory for continuity in interactions.
+
+  ---
+
+  ### Declarative Memory Quantity
+- **Type:** `int`
+- **Default:** `5`
+- **Description:**  
+  It sets the maximum number of Declarative Memories to be retrieved  
+
+  ---
+
+  ### Declarative Memory Treshold
+- **Type:** `float`
+- **Default:** `0.75`
+- **Description:**  
+  It sets the minimum relevance of the memory to be retrived. Memories with a relevance below this treshold are not retrieved.  

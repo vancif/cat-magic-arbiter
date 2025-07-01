@@ -24,6 +24,14 @@ class PluginSettings(BaseModel):
         default=False,
         description="When Enabled, the plugin will delete the episodic memory every 5 minutes and also prevents the storage of new memories. This is useful to avoid the Cat sourcing from things the user said and may be uncorrect."
     )
+    Declarative_Memory_Quantity: int = Field(
+        default=5,
+        description="Controls the quantity of declarative (rules) memories to be retrieved"
+    )
+    Declarative_Memory_Treshold: float = Field(
+        default=0.75,
+        description="Controls the treshold for declarative (rules) memories to be retrieved"
+    )
 
 
 @plugin
@@ -235,3 +243,11 @@ def before_cat_stores_episodic_memory(doc, cat):
     if Forget_Episodic_Memory:
         doc.page_content = ''
     return doc
+
+@hook
+def before_cat_recalls_declarative_memories(default_declarative_recall_config, cat):
+    settings = cat.mad_hatter.get_plugin().load_settings()
+    default_declarative_recall_config["k"] = settings.get("Declarative_Memory_Quantity") if settings.get("Declarative_Memory_Quantity") else 5
+    default_declarative_recall_config["threshold"] = settings.get("Declarative_Memory_Threshold") if settings.get("Declarative_Memory_Threshold") else 0.75
+
+    return default_declarative_recall_config
